@@ -10,9 +10,18 @@ public class PractiseController {
 
     @RequestMapping("/test")
     public String test(Model model){
+        System.out.println("this is test page!!");
+        System.out.println("----");
         model.addAttribute("name", "kapil chaudhary");
-
         return "test";
     }
 
+
+    @RequestMapping("/test2")
+    public String test2(){
+        System.out.println("kapil");
+        System.out.println("akash");
+        return "test";
+
+    }
 }
