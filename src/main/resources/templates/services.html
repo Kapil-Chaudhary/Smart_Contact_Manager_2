@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <h1>This is services page !!</h1>
+    <hr>
+
+<!--  1  -->
+<!--    <div class="host-tag" th:replace="~{base :: parent('services one', 'services two')}"></div>-->
+
+    <div class="host-tag" th:replace="~{base::parent(~{::#main-content})}">
+        <section id="main-content">
+            <h1>This is dynamic content passed to base(parent) page</h1>
+        </section>
+    </div>
+
+<!-- 2 -->
+
+
+
+</body>
+</html>

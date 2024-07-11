@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+<!--    <div class="parent-fragment" th:fragment="parent(x,y)">-->
+<!--        <h1>This is parent fragment</h1>-->
+<!--        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, veritatis!</p>-->
+<!--        <h3>Value of x is : <span th:text="${x}"></span></h3>-->
+<!--        <h3>Value of y is : <span th:text="${y}"></span></h3>-->
+<!--    </div>-->
+
+    <!--  2-->
+    <!--passing whole content -->
+    <div class="parent-fragment" th:fragment="parent(content)">
+        <h1>This is parent fragment</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, veritatis!</p>
+        <h2 th:replace="${content}"></h2>
+    </div>
+
+
+<!--3 -->
+<!--for controller -->
+    <div th:fragment="test(content)">
+        <div th:replace="${content}"></div>
+    </div>
+
+
+</body>
+</html>
