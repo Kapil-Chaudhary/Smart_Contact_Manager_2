@@ -23,8 +23,9 @@ public class PageController {
 
     // about route
     @RequestMapping("/about")
-    public String aboutPage(){
+    public String aboutPage(Model model){
         System.out.println("about page loading");
+        model.addAttribute("isLogin", true);
         return "about";
     }
 
