@@ -1,26 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" th:replace="~{base::parent(~{::#content}, ~{::title}, ~{::script})}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Services Page</title>
 </head>
 <body>
 
-    <h1>This is services page !!</h1>
-    <hr>
-
-<!--  1  -->
-<!--    <div class="host-tag" th:replace="~{base :: parent('services one', 'services two')}"></div>-->
-
-    <div class="host-tag" th:replace="~{base::parent(~{::#main-content})}">
-        <section id="main-content">
-            <h1>This is dynamic content passed to base(parent) page</h1>
-        </section>
+    <div id="content">
+        <h1>Welcome to services page!!</h1>
+        <h2>Services offered by SCM</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro, totam.</p>
     </div>
 
-<!-- 2 -->
-
-
-
+    <script>
+        console.log("services page")
+    </script>
 </body>
 </html>
