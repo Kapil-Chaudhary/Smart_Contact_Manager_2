@@ -25,3 +25,4 @@ public interface UserService extends UserRepo {
     // add more user methods here related user service[logic]
 
 }
+
