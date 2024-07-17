@@ -23,8 +23,9 @@ function changeTheme(){
 
     // set to web page
 
-    const oldTheme = currentTheme
+
     changeThemeButton.addEventListener('click', (event) => {
+        let oldTheme = currentTheme
         console.log("change theme button clicked");
 
         // if ( currentTheme=="dark"){ // theme to light
@@ -35,6 +36,7 @@ function changeTheme(){
         // }
 
         currentTheme = currentTheme=="dark" ? "light" : "dark";
+        console.log(currentTheme);
         changePageTheme(currentTheme, oldTheme);
     });
 }
@@ -68,7 +70,8 @@ function changePageTheme(theme, oldTheme){
     document.querySelector("html").classList.remove(oldTheme);
 
     // set the current theme
-    document.querySelector("html").classList.add(currentTheme);
+    if ( oldTheme ) document.querySelector("html").classList.add(currentTheme);
+
 
     // change the text of button
     document

@@ -1,13 +1,18 @@
 package com.scm.controllers;
 
+import com.scm.entities.User;
+import com.scm.forms.UserForm;
+import com.scm.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class PageController {
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/home")
     public String home(Model model){
@@ -53,8 +58,54 @@ public class PageController {
 
     // register page
     @GetMapping("/register")
-    public String register(){
+    public String register(Model model){
+
+        // create object of user form
+        UserForm userForm = new UserForm();
+        // default data bhi daal sakte hai
+//        userForm.setAbout("This is about : write something about yourself...");
+        model.addAttribute("userForm", userForm);
+
         return "register";
+    }
+
+    // processing register
+    @RequestMapping(value="/do-register", method = RequestMethod.POST)
+    public String processRegister(@ModelAttribute UserForm userForm){
+        System.out.println("Processing registration...");
+
+        // fetch from data
+        // validate the data
+        // save to database
+        // message = "Registration Successful"
+        // redirect to login page
+
+        // ------------------------------------------------------------------------
+
+        // fetch from data
+        // UserForm
+        System.out.println(userForm);
+
+
+        // validate the data
+        // todo : validate UserForm next video
+
+
+        // save to database -- user service
+        // userForm --> user
+        User user = User.builder()
+                .name(userForm.getName())
+                .email(userForm.getEmail())
+                .password(userForm.getPassword())
+                .about(userForm.getAbout())
+                .phoneNumber(userForm.getPhoneNumber())
+                .profilePic("https://learncodewithdurgesh.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flcwd_logo.45da3818.png&w=640&q=75")
+                .build();
+        User saveUser = userService.saveUser(user);
+        System.out.println("user saved ");
+        System.out.println("user save : " + saveUser);
+
+        return "redirect:/register";
     }
 
 }

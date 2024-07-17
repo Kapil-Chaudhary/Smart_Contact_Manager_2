@@ -36,12 +36,13 @@ public class User {
     private String phoneNumber;
 
 
-    // infromation
+    // information
     private boolean enabled = false;
     private boolean emailVerified = false;
     private boolean phoneVerified = false;
 
 
+    @Enumerated
     // SELF, GOOGLE, FACEBOOK, TWITTER, LINKEDIN, GITHUB
     private Providers provider = Providers.SELF;
     private Providers providerUserId;
