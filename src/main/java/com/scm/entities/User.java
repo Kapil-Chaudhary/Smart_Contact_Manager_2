@@ -2,9 +2,15 @@ package com.scm.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity(name="user")
 @Table(name="users") // agar hum @Table annotation use nhi karenge toh ye by-default user le lega table ka name
@@ -14,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Builder
-public class User {
+public class User implements UserDetails {
 
     @Id
     private String userId;
@@ -25,6 +31,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Getter(AccessLevel.NONE)
     private String password;
 
     @Column(length = 1000 )
@@ -37,7 +44,10 @@ public class User {
 
 
     // information
-    private boolean enabled = false;
+
+    @Getter(AccessLevel.NONE)
+    private boolean enabled = true;
+
     private boolean emailVerified = false;
     private boolean phoneVerified = false;
 
@@ -52,6 +62,58 @@ public class User {
     // map contacts to user
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Contact> contacts = new ArrayList<>();
+
+
+
+    // ----------------------  user details
+
+
+    // ye method jab kkam aayega jab hum authority ki baat karenge, jab hum role ki baat karenge ki user k pass konsa role hai
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roleList = new ArrayList<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // list of roles[USER, ADMIN]
+        // collection of SimpleGrantedAuthority[roles{ADMIN,USER}]
+        List<SimpleGrantedAuthority> roles = roleList.stream().map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
+        return roles;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    // for this project : jo hamari email id hai vahi username hai
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // true = not expire
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+
+    @Override
+    public boolean isEnabled(){
+        return this.enabled;
+    }
+
+
 
 }
 

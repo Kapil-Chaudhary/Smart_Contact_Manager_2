@@ -1,6 +1,7 @@
 package com.scm.services.impl;
 
 import com.scm.entities.User;
+import com.scm.helper.AppConstants;
 import com.scm.helper.ResourceNotFoundException;
 import com.scm.repository.UserRepo;
 import com.scm.services.UserService;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +24,9 @@ import java.util.function.Function;
 @Service
 public class UserServiceImpl implements UserService {
 
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepo userRepo;
@@ -38,6 +43,12 @@ public class UserServiceImpl implements UserService {
         // password encode
         // user.setPassword(userId)
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // set the user role
+        user.setRoleList(List.of(AppConstants.ROLE_USER));
+
+        logger.info(user.getPassword().toString());
         return userRepo.save(user);
     }
 
