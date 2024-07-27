@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,45 +15,26 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-
-
-    // in-memory database
-    // user create and login using java code with in memory service
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//
-//        UserDetails user1 = User.withDefaultPasswordEncoder().username("admin123").password("123").roles("ADMIN", "User").build();
-//        UserDetails user2 = User.withDefaultPasswordEncoder().username("user123").password("123").build();
-//
-//
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(user1, user2);
-//        return manager;
-//    }
-
-
 
 
     @Autowired
     private SecurityCustomUserDetailService userDetailsService;
 
 
-    // daoAuthenticationProvider k pass vo sabhi methods hai jiski help se hum apni service register kar skte hai
+    // daoAuthenticationProvider k pass vo sabhi methods hai jiski help se hum apni service register(ya authenticate) kar skte hai
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
 
-        // userDetailsService ka object
-        provider.setUserDetailsService(userDetailsService);
-
-        // password encoder ka object
-        provider.setPasswordEncoder(passwordEncoder());
-
-        return provider;
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService); // userDetailsService ka object
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder()); // password encoder ka object
+        return daoAuthenticationProvider;
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -59,4 +42,41 @@ public class SecurityConfig {
     }
 
 
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
+        // url configure kiay hai ki koun se public ranhenge aur konse private rahenge
+        httpSecurity.authorizeHttpRequests( authorized -> {
+//            authorized.requestMatchers("/home", "/register", "/services").permitAll();
+            authorized.requestMatchers("/user/**").authenticated();
+            authorized.anyRequest().permitAll();
+        });
+
+        // form default login
+        // agar kuch bhi change karna hua to hum yaha aayenge : form login se related
+        httpSecurity.formLogin(Customizer.withDefaults());
+
+        DefaultSecurityFilterChain build = httpSecurity.build();
+        return build;
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
