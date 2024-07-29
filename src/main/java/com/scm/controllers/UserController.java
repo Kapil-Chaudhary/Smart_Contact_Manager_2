@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserController {
 
     // user Dashboard page
-    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+    @RequestMapping(value = "/dashboard", method = RequestMethod.POST)
     public String dashboard() {
         return "user/dashboard";
     }
