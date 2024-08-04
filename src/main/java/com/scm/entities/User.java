@@ -55,7 +55,7 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING) // mtlb ye jo enum hai uska type jo save karna hai vo as a string save karna hai, ya fir google hai toh hamari string google save ho dackend main (database main )
     // SELF, GOOGLE, FACEBOOK, TWITTER, LINKEDIN, GITHUB
     private Providers provider = Providers.SELF;
-    private Providers providerUserId;
+    private String providerUserId;
 
     // add more field if needed
 

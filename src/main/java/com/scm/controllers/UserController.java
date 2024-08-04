@@ -18,6 +18,7 @@ public class UserController {
     // user profile page
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String profile() {
+        System.out.println("User Profile");
         return "user/profile";
     }
 

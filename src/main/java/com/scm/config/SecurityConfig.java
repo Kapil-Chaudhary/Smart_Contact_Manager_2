@@ -1,6 +1,7 @@
 package com.scm.config;
 
 
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,6 +35,8 @@ public class SecurityConfig {
     @Autowired
     private SecurityCustomUserDetailService userDetailsService;
 
+    @Autowired
+    private OAuthAuthenticationSuccessHandler handler;
 
     // daoAuthenticationProvider k pass vo sabhi methods hai jiski help se hum apni service register(ya authenticate) kar skte hai
     @Bean
@@ -90,6 +93,12 @@ public class SecurityConfig {
 
         });
 
+        // oauth configurations
+        httpSecurity.oauth2Login(oauth -> {
+            oauth.loginPage("/login");
+            oauth.successHandler(handler);
+        });
+
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.logout(logoutForm ->{
             logoutForm.logoutUrl("/do-logout");
@@ -98,8 +107,8 @@ public class SecurityConfig {
 
         DefaultSecurityFilterChain build = httpSecurity.build();
         return build;
-    }
 
+    }
 }
 
 
