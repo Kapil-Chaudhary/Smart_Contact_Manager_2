@@ -64,12 +64,17 @@ public class PageController {
         return new String("contact");
     }
 
+
+
+    // this is login view
     // login page
     @GetMapping("/login")
     public String login(){
         return new String("login");
     }
 
+
+    // this is registration page
     // register page
     @GetMapping("/register")
     public String register(Model model){

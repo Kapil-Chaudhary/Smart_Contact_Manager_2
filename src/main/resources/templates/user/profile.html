@@ -7,6 +7,14 @@
 <body>
 
     <h1> this is user profile</h1>
+    <h1 data-th-text="${loggedInUser.name}"></h1>
+    <h1 data-th-text="${loggedInUser.email}"></h1>
+
+    <!-- agar user logged in hai toh -->
+    <div th:if="${loggedInUser}">
+        <h1>User is logged in</h1>
+        <h1>this is user logged in section</h1>
+    </div>
 
 </body>
 </html>
