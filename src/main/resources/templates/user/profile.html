@@ -1,20 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html
+        lang="en"
+        th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}"
+>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title data-th-text="${loggedInUser.name} + ' | SCM'">Profile page</title>
 </head>
+
 <body>
 
-    <h1> this is user profile</h1>
-    <h1 data-th-text="${loggedInUser.name}"></h1>
-    <h1 data-th-text="${loggedInUser.email}"></h1>
+<div id="content">
+    <!-- sidebar -->
 
-    <!-- agar user logged in hai toh -->
-    <div th:if="${loggedInUser}">
-        <h1>User is logged in</h1>
-        <h1>this is user logged in section</h1>
+    <div class="sm:pl-64 pt-20" style="height: 1000px">
+        <div class="flex justify-center flex-col items-center">
+            <h1 class="text-5xl">Welcome to profile page</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, aut.</p>
+        </div>
     </div>
+</div>
+
+<script>console.log("this is a profile page")</script>
 
 </body>
 </html>

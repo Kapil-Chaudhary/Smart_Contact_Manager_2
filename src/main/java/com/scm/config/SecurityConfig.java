@@ -71,7 +71,7 @@ public class SecurityConfig {
         httpSecurity.formLogin(formLogin -> {
             formLogin.loginPage("/login");
             formLogin.loginProcessingUrl("/authenticate"); // ye url chalega jab form ko submit karenge
-            formLogin.successForwardUrl("/user/dashboard"); // but open ye page hoga agar success hua toh
+            formLogin.successForwardUrl("/user/profile"); // but open ye page hoga agar success hua toh
 //            formLogin.failureForwardUrl("/login?error=true");
 
             formLogin.usernameParameter("email"); // so isse kya hoga ki jo from main username hoga uska naam email hoga
