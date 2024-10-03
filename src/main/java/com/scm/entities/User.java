@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
 
     @Id
-    private String userId;
+    private String userId; // I have change userId to id here
 
     @Column(name = "user_name", nullable = false)
     private String name;

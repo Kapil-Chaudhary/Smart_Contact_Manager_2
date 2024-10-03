@@ -2,15 +2,23 @@ package com.scm.entities;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Contact {
 
     @Id
-    private int id;
+    private String id;
 
     private String name;
     private String email;
@@ -25,6 +33,8 @@ public class Contact {
     private String websiteLink;
     private String linkedinLink;
     // private List<String> socialLinks = new ArrayList<>();
+
+    private String cloudinaryImagePublicId  ;
 
     // map to user entity
     @ManyToOne
