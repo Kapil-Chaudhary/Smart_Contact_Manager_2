@@ -1,6 +1,7 @@
 package com.scm.services.impl;
 
 import com.scm.entities.Contact;
+import com.scm.entities.User;
 import com.scm.helper.ResourceNotFoundException;
 import com.scm.repository.ContactRepo;
 import com.scm.services.ContactService;
@@ -52,5 +53,11 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public List<Contact> getByUserId(String userId) {
         return contactRepo.findByUserId(userId);
+    }
+
+    @Override
+    public List<Contact> getByUser(User user) {
+        List<Contact> byUser = this.contactRepo.findByUser(user);
+        return byUser;
     }
 }
