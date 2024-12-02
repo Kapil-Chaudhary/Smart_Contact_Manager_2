@@ -1,6 +1,7 @@
 package com.scm.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,6 +39,7 @@ public class Contact {
 
     // map to user entity
     @ManyToOne
+    @JsonIgnore
     private User user;
 
     // link user to socialLink
