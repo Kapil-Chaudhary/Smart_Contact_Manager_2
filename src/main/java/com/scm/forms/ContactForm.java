@@ -1,5 +1,7 @@
 package com.scm.forms;
 
+import com.scm.validators.ValidFile;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -11,8 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Builder
-@Data
 public class ContactForm {
 
     @NotBlank(message = "Name is required")
@@ -37,11 +37,13 @@ public class ContactForm {
 
     private String linkedInLink;
 
-    private MultipartFile profileImage;
-
     // annotation create karenge jo file validate
     // size
     // resolution
+
+    @ValidFile(message = "Invalid File")
     private MultipartFile contactImage;
+
+    private String picture;
 
 }

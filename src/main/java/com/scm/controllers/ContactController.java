@@ -14,6 +14,7 @@ import com.scm.services.UserService;
 import com.scm.services.impl.ContactServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.aspectj.weaver.ast.Var;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class ContactController {
 
     // add contact page handler
     @RequestMapping("/add")
-    public String addContactView(Model model){
+    public String addContactView(Model model) {
 
         ContactForm contactForm = new ContactForm();
         model.addAttribute("contactForm", contactForm);
@@ -62,7 +63,7 @@ public class ContactController {
 
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String saveContact(@Valid @ModelAttribute ContactForm contactForm, BindingResult bindingResult, Authentication authentication, HttpSession session){
+    public String saveContact(@Valid @ModelAttribute ContactForm contactForm, BindingResult bindingResult, Authentication authentication, HttpSession session) {
 
         // get user from authentication
         String username = Helper.getEmailOfLoggedinUser(authentication); // here email == username
@@ -72,10 +73,10 @@ public class ContactController {
 
         // 1. validate form
         // TODO : add validation logic here
-        if ( bindingResult.hasErrors() ) {
+        if (bindingResult.hasErrors()) {
             session.setAttribute("message", Message.builder()
                     .content("Please correct the following errors")
-                            .type(MessageType.red)
+                    .type(MessageType.red)
                     .build());
             return "user/add_contact";
         }
@@ -91,7 +92,6 @@ public class ContactController {
         String fileURL = imageService.uploadImage(contactForm.getContactImage(), filename);
 
 
-
         // form ---> contact
         Contact contact = new Contact();
         contact.setName(contactForm.getName());
@@ -101,7 +101,7 @@ public class ContactController {
         contact.setAddress(contactForm.getAddress());
         contact.setDescription(contactForm.getDescription());
         contact.setUser(user); // ---------- get user from userService
-        contact.setLinkedinLink(contactForm.getLinkedInLink());
+        contact.setLinkedInLink(contactForm.getLinkedInLink());
         contact.setWebsiteLink(contactForm.getWebsiteLink());
         contact.setPicture(fileURL);
         contact.setCloudinaryImagePublicId(filename);
@@ -123,13 +123,12 @@ public class ContactController {
     @RequestMapping
     public String viewContacts(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = AppConstants.PAGE_SIZE+"") int size,
+            @RequestParam(value = "size", defaultValue = AppConstants.PAGE_SIZE + "") int size,
             @RequestParam(value = "sortBy", defaultValue = "name") String sortBy,
             @RequestParam(value = "direction", defaultValue = "asc") String direction, Model model,
-            Authentication authentication)
-    {
+            Authentication authentication) {
 
-        String username  = Helper.getEmailOfLoggedinUser(authentication);
+        String username = Helper.getEmailOfLoggedinUser(authentication);
         User user = userService.getUserByEmail(username);
 
         // load all the contacts
@@ -179,19 +178,123 @@ public class ContactController {
 
 
     // delete contact
-    @RequestMapping(value = "/delete/{contactId}", method = RequestMethod.DELETE)
-    public String deleteContact(@PathVariable("contactId") String contactId, HttpSession session){
+    @RequestMapping(value = "/delete/{contactId}", method = RequestMethod.GET)
+    public String deleteContact(@PathVariable("contactId") String contactId, HttpSession session) {
 
-        this.contactService.delete(contactId);
+        contactService.delete(contactId);
         logger.info("contact {} deleted", contactId);
 
-        session.setAttribute("message", Message.builder()
-                .content("Contact is deleted successfully")
-                .type(MessageType.green)
-                .build());
+        session.setAttribute("message",
+                Message.builder()
+                    .content("Contact is deleted successfully")
+                    .type(MessageType.green)
+                    .build());
 
         return "redirect:/user/contacts";
     }
 
-    
+
+    // update contact form view
+    @GetMapping("/view/{contactId}")
+    public String updateContactFormView(@PathVariable("contactId") String contactId, Model model) {
+
+        //        Contact contact1 = Contact.builder()
+//                .name(contact.getName())
+//                .email(contact.getEmail())
+//                .phoneNumber(contact.getPhoneNumber())
+//                .address(contact.getAddress())
+//                .description(contact.getDescription())
+//                .favorite(contact.isFavorite())
+//                .websiteLink(contact.getWebsiteLink())
+//                .linkedinLink(contact.getLinkedinLink())
+//                .build();
+
+        var contact = contactService.getById(contactId);
+        ContactForm contactForm = new ContactForm();
+        contactForm.setName(contact.getName());
+        contactForm.setEmail(contact.getEmail());
+        contactForm.setPhoneNumber(contact.getPhoneNumber());
+        contactForm.setAddress(contact.getAddress());
+        contactForm.setDescription(contact.getDescription());
+        contactForm.setFavorite(contact.isFavorite());
+        contactForm.setWebsiteLink(contact.getWebsiteLink());
+        contactForm.setLinkedInLink(contact.getLinkedInLink());
+        contactForm.setPicture(contact.getPicture());
+
+        model.addAttribute("contactForm", contactForm);
+        model.addAttribute("contactId", contactId);
+
+//        return "redirect:/user/update_contact_view";
+        return "user/update_contact_view";
+    }
+
+
+    @RequestMapping(value = "/update/{contactId}", method = RequestMethod.POST)
+    public String updateContact(@PathVariable("contactId") String contactId,
+                                @Valid @ModelAttribute ContactForm contactForm,
+                                BindingResult bindingResult,
+                                Model model) {
+
+        // update the contact
+        if (bindingResult.hasErrors()) {
+            return "user/update_contact_view";
+        }
+
+        var con = contactService.getById(contactId);
+        con.setId(contactId);
+        con.setName(contactForm.getName());
+        con.setEmail(contactForm.getEmail());
+        con.setPhoneNumber(contactForm.getPhoneNumber());
+        con.setAddress(contactForm.getAddress());
+        con.setDescription(contactForm.getDescription());
+        con.setFavorite(contactForm.isFavorite());
+        con.setWebsiteLink(contactForm.getWebsiteLink());
+        con.setLinkedInLink(con.getLinkedInLink());
+
+        // process image:
+
+        if (contactForm.getContactImage() != null && !contactForm.getContactImage().isEmpty()) {
+            logger.info("file is not empty");
+            String fileName = UUID.randomUUID().toString();
+            String imageUrl = imageService.uploadImage(contactForm.getContactImage(), fileName);
+            con.setCloudinaryImagePublicId(fileName);
+            con.setPicture(imageUrl);
+            contactForm.setPicture(imageUrl);
+
+        } else {
+            logger.info("file is empty");
+        }
+
+        var updateCon = contactService.update(con);
+        logger.info("updated contact {}", updateCon);
+
+        model.addAttribute("message", Message.builder().content("Contact Updated !!").type(MessageType.green).build());
+
+        return "redirect:/user/contacts/view/" + contactId;
+    }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
