@@ -85,11 +85,7 @@ public class ContactController {
         // 2. process the contact picture
         // image process
         logger.info("file information : {}", contactForm.getContactImage().getOriginalFilename());
-        // upload karna ka code
 
-        String filename = UUID.randomUUID().toString();
-
-        String fileURL = imageService.uploadImage(contactForm.getContactImage(), filename);
 
 
         // form ---> contact
@@ -103,8 +99,15 @@ public class ContactController {
         contact.setUser(user); // ---------- get user from userService
         contact.setLinkedInLink(contactForm.getLinkedInLink());
         contact.setWebsiteLink(contactForm.getWebsiteLink());
-        contact.setPicture(fileURL);
-        contact.setCloudinaryImagePublicId(filename);
+
+        // upload karna ka code
+        if (contactForm.getContactImage() != null && !contactForm.getContactImage().isEmpty()) {
+            String filename = UUID.randomUUID().toString();
+            String fileURL = imageService.uploadImage(contactForm.getContactImage(), filename);
+            contact.setPicture(fileURL);
+            contact.setCloudinaryImagePublicId(filename);
+
+        }
 
         contactService.save(contact);
         System.out.println(contactForm);
@@ -177,8 +180,9 @@ public class ContactController {
     }
 
 
-    // delete contact
-    @RequestMapping(value = "/delete/{contactId}", method = RequestMethod.GET)
+    // delete contact --> /user/contacts/delete/
+//    @RequestMapping(value = "/delete/{contactId}", method = RequestMethod.GET)
+    @RequestMapping("/delete/{contactId}")
     public String deleteContact(@PathVariable("contactId") String contactId, HttpSession session) {
 
         contactService.delete(contactId);
@@ -209,7 +213,10 @@ public class ContactController {
 //                .linkedinLink(contact.getLinkedinLink())
 //                .build();
 
+
+
         var contact = contactService.getById(contactId);
+
         ContactForm contactForm = new ContactForm();
         contactForm.setName(contact.getName());
         contactForm.setEmail(contact.getEmail());
@@ -224,7 +231,6 @@ public class ContactController {
         model.addAttribute("contactForm", contactForm);
         model.addAttribute("contactId", contactId);
 
-//        return "redirect:/user/update_contact_view";
         return "user/update_contact_view";
     }
 

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
 
     @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String userId; // I have change userId to id here
 
     @Column(name = "user_name", nullable = false)

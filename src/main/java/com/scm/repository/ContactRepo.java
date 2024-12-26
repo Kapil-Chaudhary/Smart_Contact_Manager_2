@@ -19,6 +19,9 @@ public interface ContactRepo extends JpaRepository<Contact, String> {
     // find the contacts by user
     Page<Contact> findByUser(User user, Pageable pageable);
 
+    void delete(Contact contact);
+    void deleteById(String id);
+
 
     // ----------------- Custom query methods ------------------------
 

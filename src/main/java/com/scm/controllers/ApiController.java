@@ -8,18 +8,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @RequestMapping("/api")
 public class ApiController {
 
+    // get contact
+
     @Autowired
     private ContactService contactService;
 
-    // get contact
-    @GetMapping("/contact/{contact}")
+    @GetMapping("/contacts/{contactId}")
     public Contact getContact(@PathVariable String contactId) {
-        return this.contactService.getById(contactId);
+        return contactService.getById(contactId);
     }
-
 
 }

@@ -38,6 +38,10 @@ public class SecurityConfig {
     @Autowired
     private OAuthAuthenticationSuccessHandler handler;
 
+    @Autowired
+    private AuthFailureHandler authFailureHandler;
+
+
     // daoAuthenticationProvider k pass vo sabhi methods hai jiski help se hum apni service register(ya authenticate) kar skte hai
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -89,6 +93,8 @@ public class SecurityConfig {
 //                public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 //                }
 //            });
+
+            formLogin.failureHandler(authFailureHandler);
 
 
         });

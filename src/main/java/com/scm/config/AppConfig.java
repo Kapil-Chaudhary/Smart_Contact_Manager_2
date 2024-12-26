@@ -1,4 +1,4 @@
-package com.scm.config.AppConfig;
+package com.scm.config;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -9,14 +9,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
 
+//    @Value("${cloudinary.cloud.name}")
+//    private String cloudName;
+//
+//    @Value("${cloudinary.api.key}")
+//    public String apiKey;
+//
+//    @Value("${cloudinary.api.secret}")
+//    public String apiSecret;
+
+
     @Value("${cloudinary.cloud.name}")
     private String cloudName;
 
     @Value("${cloudinary.api.key}")
-    public String apiKey;
+    private String apiKey;
 
     @Value("${cloudinary.api.secret}")
-    public String apiSecret;
+    private String apiSecret;
 
 
      // cloudinary ka bean create karenge
