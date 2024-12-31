@@ -2,8 +2,10 @@ package com.scm.services.impl;
 
 import com.scm.entities.User;
 import com.scm.helper.AppConstants;
+import com.scm.helper.Helper;
 import com.scm.helper.ResourceNotFoundException;
 import com.scm.repository.UserRepo;
+import com.scm.services.EmailService;
 import com.scm.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private EmailService emailService;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
@@ -47,9 +52,16 @@ public class UserServiceImpl implements UserService {
 
         // set the user role
         user.setRoleList(List.of(AppConstants.ROLE_USER));
-
         logger.info(user.getPassword().toString());
-        return userRepo.save(user);
+        User savedUser = userRepo.save(user);
+
+        String emailToken = UUID.randomUUID().toString();
+        user.setEmailToken(emailToken);
+        userRepo.save(user);
+        String emailForEmailVerification = Helper.getEmailForEmailVerification(emailToken);
+        this.emailService.sendEmail(savedUser.getEmail(), "Verify Account : Smart Contact Manager", emailForEmailVerification);
+
+        return savedUser;
     }
 
     @Override

@@ -8,11 +8,14 @@ import com.scm.helper.AppConstants;
 import com.scm.helper.Helper;
 import com.scm.helper.Message;
 import com.scm.helper.MessageType;
+import com.scm.repository.ContactRepo;
 import com.scm.services.ContactService;
 import com.scm.services.ImageService;
 import com.scm.services.UserService;
 import com.scm.services.impl.ContactServiceImpl;
+import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.aspectj.weaver.ast.Var;
 import org.slf4j.Logger;
@@ -26,6 +29,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -50,6 +54,12 @@ public class ContactController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EntityManager entityManager;
+
+    @Autowired
+    private ContactRepo contactRepo;
 
     // add contact page handler
     @RequestMapping("/add")
@@ -180,12 +190,29 @@ public class ContactController {
     }
 
 
-    // delete contact --> /user/contacts/delete/
-//    @RequestMapping(value = "/delete/{contactId}", method = RequestMethod.GET)
+    // problem is : I am not able to delete contact directely by using contactService or contactRepo --> i tried everything but still not working
+    //              so to resolve this : here we directly use this query approach to delete contact
+
+    // @RequestMapping(value = "/delete/{contactId}", method = RequestMethod.GET)
+    // delete contact ---> http://localhost:8081/user/contacts/delete/3a817978-d357-4577-aa67-8e1865697019
     @RequestMapping("/delete/{contactId}")
+    @Transactional
     public String deleteContact(@PathVariable("contactId") String contactId, HttpSession session) {
 
-        contactService.delete(contactId);
+        // this is not working : below 2 are working
+//        this.contactService.delete(contactId);
+
+
+            // 1.
+            this.contactRepo.deleteContactById(contactId);
+
+            // 2.
+//        String query = "DELETE FROM Contact WHERE id = :id";
+//        int rowsAffected = entityManager.createQuery(query)
+//                                                    .setParameter("id", contactId)
+//                                                    .executeUpdate();
+//        System.out.println("Rows affected after delete contact : " + rowsAffected);
+
         logger.info("contact {} deleted", contactId);
 
         session.setAttribute("message",
@@ -196,7 +223,6 @@ public class ContactController {
 
         return "redirect:/user/contacts";
     }
-
 
     // update contact form view
     @GetMapping("/view/{contactId}")

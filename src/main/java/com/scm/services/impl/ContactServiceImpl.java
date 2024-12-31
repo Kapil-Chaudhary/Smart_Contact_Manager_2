@@ -5,6 +5,7 @@ import com.scm.entities.User;
 import com.scm.helper.ResourceNotFoundException;
 import com.scm.repository.ContactRepo;
 import com.scm.services.ContactService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -62,7 +63,10 @@ public class ContactServiceImpl implements ContactService {
 
         var contact = contactRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Contact not found with given id " + id));
         this.contactRepo.delete(contact);
-        System.out.println("contact is deleted with id : " + id); // 45710357-5992-42a3-9774-07f0ca134ff9
+        System.out.println("contact is deleted with id : " + id);
+
+//        this.contactRepo.deleteById(id);
+//        System.out.println("contact is deleted with id : " + id); // 45710357-5992-42a3-9774-07f0ca134ff9
     }
 
     @Override

@@ -52,6 +52,8 @@ public class User implements UserDetails {
     private boolean emailVerified = false;
     private boolean phoneVerified = false;
 
+    // http://localhost:8081/auth/emailtoken } -> email
+    private String emailToken;
 
     @Enumerated(value = EnumType.STRING) // mtlb ye jo enum hai uska type jo save karna hai vo as a string save karna hai, ya fir google hai toh hamari string google save ho dackend main (database main )
     // SELF, GOOGLE, FACEBOOK, TWITTER, LINKEDIN, GITHUB
